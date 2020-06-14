@@ -1,28 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Button } from 'antd';
-import { namespace } from '@/models/workPlatform';
+import PersonCard from '../../components/PersonCard';
+import { namespace } from '@/models/list';
+
+import './index.less'
 
 const mapStateToProps = (state) => {
     let {
-        menuList,
+        peopleList,
     } = state[namespace];
     return {
-        menuList,
+        peopleList,
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getMenuList: (payload) => {
+        getPeopleList: (payload) => {
             dispatch({
-                type: `${namespace}/getMenuList`,
-                payload,
-            });
-        },
-        addMenuItem: (payload) => {
-            dispatch({
-                type: `${namespace}/changeMenuList`,
+                type: `${namespace}/getPeopleList`,
                 payload,
             });
         },
@@ -30,24 +26,20 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
-class StudentList extends Component {
+class List extends Component {
     componentDidMount() {
-        this.props.getMenuList({ id: '123' })
+        this.props.getPeopleList({ pNo: 1, pSize: 10 })
 
     }
-    onBntClick = () => {
-        this.props.addMenuItem({ name: 'newItem' })
-    }
     render() {
-        return <ul>
-            <Button onClick={this.onBntClick}>123</Button>
+        return <div className="peopleList">
             {
-                this.props.menuList.map(item => {
-                    return <li key={item.name}>{item.name}</li>
+                this.props.peopleList.map(item => {
+                    return <PersonCard key={item.name} name={item.name} description={item.description}/>
                 })
             }
-        </ul>
+        </div>
     }
 }
 
-export default StudentList;
+export default List;

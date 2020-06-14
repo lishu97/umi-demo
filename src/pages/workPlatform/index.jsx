@@ -1,54 +1,52 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Button } from 'antd';
+import { withRouter } from 'umi';
 import { namespace } from '@/models/workPlatform';
-import styles from './index.less'
+import './index.less';
 
 const mapStateToProps = (state) => {
-    let {
-        menuList,
-    } = state[namespace];
-    return {
-        menuList,
-    }
-}
+	let { menuList } = state[namespace];
+	return {
+		menuList
+	};
+};
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-        getMenuList: (payload) => {
-            dispatch({
-                type: `${namespace}/getMenuList`,
-                payload,
-            });
-        },
-        addMenuItem: (payload) => {
-            dispatch({
-                type: `${namespace}/changeMenuList`,
-                payload,
-            });
-        },
-    }
-}
+	return {
+		getMenuList: (payload) => {
+			dispatch({
+				type: `${namespace}/getMenuList`,
+				payload
+			});
+		}
+	};
+};
 
+@withRouter
 @connect(mapStateToProps, mapDispatchToProps)
 class WorkPlatForm extends Component {
-    componentDidMount() {
-        this.props.getMenuList({ id: '123' })
-
-    }
-    onBntClick = () => {
-        this.props.addMenuItem({ name: 'newItem' })
-    }
-    render() {
-        return <ul className={styles.workPlatform}>
-            <Button onClick={this.onBntClick}>123</Button>
-            {
-                this.props.menuList.map(item => {
-                    return <li key={item.name}>{item.name}</li>
-                })
-            }
-        </ul>
-    }
+	componentDidMount() {
+		this.props.getMenuList({ id: 'userid' });
+	}
+	onMenuItemClick = (key) => {
+        this.props.history.push(`/${key}`);
+    };
+	render() {
+		return (
+			<div className="workPlatform">
+				<h2>菜单选择</h2>
+				<ul>
+					{this.props.menuList.map((item) => {
+						return (
+							<li key={item.name} onClick={() => this.onMenuItemClick(item.key)}>
+								{item.name}
+							</li>
+						);
+					})}
+				</ul>
+			</div>
+		);
+	}
 }
 
 export default WorkPlatForm;

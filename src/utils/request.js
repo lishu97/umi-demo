@@ -1,7 +1,14 @@
 import { message } from 'antd';
 
+const DEFAULT_OPTIONS = {
+    url: '',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    mode: 'cors',
+}
 
-export default (()=>{
+export default (() => {
     let globalRequestCount = 0;
     let hideLoading = null;
 
@@ -14,20 +21,20 @@ export default (()=>{
     return async function request(options) {
         // 满足条件时,打开全局loading
         globalRequestCount++;
-        if(!hideLoading) {
+        if (!hideLoading) {
             hideLoading = message.loading('加载中...', 0)
         }
 
         // 处理fetch的options
-        let {url, method = 'GET', body} = options;
+        let { url, method = 'GET', body } = options;
         delete options.url;
         options.method = method.toUpperCase()
-        if(method === 'GET') {
-            if(body && body.__proto__.toString() === '[object Object]') {
+        if (method === 'GET') {
+            if (body && body.__proto__.toString() === '[object Object]') {
                 let isFirstParams = true
                 for (const key in body) {
                     if (body.hasOwnProperty(key)) {
-                        if(isFirstParams) {
+                        if (isFirstParams) {
                             isFirstParams = false;
                             url = `${url}?${key}=${body[key]}`
                         } else {
@@ -37,13 +44,15 @@ export default (()=>{
                 }
             }
             delete options.body;
+        } else if (method === 'POST') {
+            options.body = JSON.stringify(options.body)
         }
 
-        const response = await fetch(url, options);
+        const response = await fetch(url, {...DEFAULT_OPTIONS, ...options});
         checkStatus(response);
 
         // 满足条件时,关闭全局loading
-        if(--globalRequestCount === 0) {
+        if (--globalRequestCount === 0) {
             hideLoading()
             hideLoading = null;
         }
