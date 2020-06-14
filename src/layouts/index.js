@@ -1,28 +1,33 @@
-import { Component } from 'react';
-import { Layout } from 'antd';
+import React, { Component } from 'react'
 
-// Header, Footer, Sider, Content组件在Layout组件模块下
-const { Header, Footer, Sider, Content } = Layout;
+import { withRouter } from 'umi'
+import BaseLayout from './BaseLayout'
+import zh_CN from 'antd/lib/locale-provider/zh_CN'
+import { ConfigProvider } from 'antd'
 
-class BasicLayout extends Component {
-    render() {
-        return (
-            <Layout>
-            <Sider width={256} style={{ minHeight: '100vh', color: 'white' }}>
-        Sider
-        </Sider>
-        <Layout >
-        <Header style={{ background: '#fff', textAlign: 'center', padding: 0 }}>Header</Header>
-        <Content style={{ margin: '24px 16px 0' }}>
-    <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-        {this.props.children}
-    </div>
-        </Content>
-        <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
-        </Layout>
-        </Layout>
-    )
+import {LAYOUT_CONFIG} from '../utils/constant'
+
+@withRouter
+class Layout extends Component {
+  computeLayout(){
+    const { children } = this.props
+    const isBaseLayout = LAYOUT_CONFIG.baseLayout.indexOf(this.props.location.pathname) !== -1;
+    switch(true) {
+      case isBaseLayout: {
+        return <BaseLayout>{children}</BaseLayout>
+      }
+      default: {
+        return children;
+      }
     }
+  }
+  render() {
+    return (
+      <ConfigProvider locale={zh_CN}>
+          { this.computeLayout() }
+      </ConfigProvider>
+    )
+  }
 }
 
-export default BasicLayout;
+export default Layout

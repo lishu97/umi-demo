@@ -1,0 +1,42 @@
+// text overflow ellipsis：单行文本超出后显示省略号
+.toe() {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+// text lines：文本超出自定义行数后显示省略号（适用于webkit内核和移动端）
+.tl(@lineNum:2) {
+  /*! autoprefixer: ignore next */ // 此行勿删！
+  -webkit-box-orient: vertical; // 避免压缩后删除此行
+  -webkit-line-clamp: @lineNum; // 显示省略号行数
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+}
+
+// user select none：禁止选中文本
+.usn() {
+  user-select: none;
+}
+
+// clear float：清除浮动
+.cf() {
+  zoom: 1;
+  &::after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+  }
+}
+
+// force wrap：强制换行
+.fw() {
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
