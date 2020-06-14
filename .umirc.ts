@@ -5,7 +5,7 @@ export default defineConfig({
   nodeModulesTransform: {
     type: 'none',
   },
-  title: '渝中重点人',
+  title: '人员管理',
   // routes: [
   //   { path: '/login', component: '@/pages/login', title:'test2' },
   //   { path: '/', component: '@/pages/index' },
